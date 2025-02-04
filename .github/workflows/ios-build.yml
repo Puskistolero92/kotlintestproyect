@@ -46,11 +46,11 @@ jobs:
           
       - name: Verify XCFramework directory exists
         run: |
-          if [ -d "shared/build/XCFrameworks/release" ]; then
+          if [ -d "composeApp/build/XCFrameworks/release" ]; then
             echo "Directory exists!"
           else
             echo "Directory does not exist!"
           fi
 
       - name: ✅ Verificar que la build fue exitosa
-        run: ls -l shared/build/XCFrameworks/release
+        run: ls -l composeApp/build/XCFrameworks/release
