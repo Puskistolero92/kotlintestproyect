@@ -34,38 +34,33 @@ jobs:
       - name: 🚀 Configurar Gradle Wrapper
         run: chmod +x ./gradlew
 
-      - name: 📦 Instalar dependencias de CocoaPods
-        run: |
-          cd iosApp
-          pod install
-
+      - name: 🔹 Install Xcode dependencies (Si usas CocoaPods)
+        run: pod install
+        working-directory: iosApp
+        
       - name: Assemble iOS XCFramework
         run: |
           chmod +x gradlew
           ./gradlew assembleXCFramework
 
-      - name: Create iOS IPA from Xcode
+      - name: 🔹 Build iOS App Archive (.xcarchive)
         run: |
-          # Primero, asegúrate de tener configurada la firma de código en tu proyecto
-          export DEVELOPMENT_TEAM="YOUR_DEVELOPMENT_TEAM_ID"
-          export PROVISIONING_PROFILE="YOUR_PROVISIONING_PROFILE"
-          export CODE_SIGN_IDENTITY="iPhone Distribution"
-          
-          # Comando para crear el archivo IPA usando Xcode
-          xcodebuild -project "kotlintestproject2.xcodeproj" \
-                      -scheme "org.example.kotlintestproject2" \
-                      -sdk iphoneos \
-                      -configuration Release \
-                      archive \
-                      -archivePath $PWD/build/kotlintestproject2.xcarchive
+          xcodebuild -workspace iosApp/iosApp.xcworkspace \
+                     -scheme iosApp \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     archive \
+                     -archivePath $GITHUB_WORKSPACE/build/iosApp.xcarchive
 
+      - name: 🔹 Export IPA
+        run: |
           xcodebuild -exportArchive \
-                      -archivePath $PWD/build/kotlintestproject2.xcarchive \
-                      -exportPath $PWD/build/ipa \
-                      -exportOptionsPlist "ExportOptions.plist"
+                     -archivePath $GITHUB_WORKSPACE/build/iosApp.xcarchive \
+                     -exportPath $GITHUB_WORKSPACE/build/ipa \
+                     -exportOptionsPlist iosApp/ExportOptions.plist
 
-      - name: Upload IPA as artifact
+      - name: 🔹 Upload IPA como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: ios-app-ipa
-          path: $PWD/build/ipa/kotlintestproject2.ipa
+          name: iosApp.ipa
+          path: build/ipa
