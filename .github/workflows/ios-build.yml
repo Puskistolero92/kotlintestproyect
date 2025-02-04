@@ -52,15 +52,15 @@ jobs:
           export CODE_SIGN_IDENTITY="iPhone Distribution"
           
           # Comando para crear el archivo IPA usando Xcode
-          xcodebuild -workspace "your-workspace.xcworkspace" \
+          xcodebuild -workspace "kotlintestproyect.xcworkspace" \
                       -scheme "org.example.kotlintestproject2" \
                       -sdk iphoneos \
                       -configuration Release \
                       archive \
-                      -archivePath $PWD/build/your-app.xcarchive
+                      -archivePath $PWD/build/kotlintestproyect.xcarchive
 
           xcodebuild -exportArchive \
-                      -archivePath $PWD/build/your-app.xcarchive \
+                      -archivePath $PWD/build/kotlintestproyect.xcarchive \
                       -exportPath $PWD/build/ipa \
                       -exportOptionsPlist "ExportOptions.plist"
 
@@ -68,4 +68,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ios-app-ipa
-          path: $PWD/build/ipa/your-app.ipa
+          path: $PWD/build/ipa/kotlintestproyect.ipa
