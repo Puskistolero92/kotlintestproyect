@@ -10,7 +10,7 @@ on:
       - main
       - develop
   workflow_dispatch:  # Permite la ejecución manual
-jobs:
+obs:
   build-ios:
     runs-on: macos-latest
     steps:
@@ -23,6 +23,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: List directory contents
+        run: ls -la  # Verifica la ubicación de gradlew
+
       - name: Install CocoaPods dependencies
         run: |
           cd iosApp
@@ -31,7 +34,7 @@ jobs:
       - name: Build iOS Framework
         run: |
           cd ..
-          ./gradlew :composeApp:assembleXCFramework
+          ./gradlew :composeApp:assembleXCFramework  # Este paso debería ejecutarse correctamente
 
       - name: Build iOS App
         run: |
