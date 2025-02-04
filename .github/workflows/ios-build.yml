@@ -10,7 +10,7 @@ on:
       - main
       - develop
   workflow_dispatch:  # Permite la ejecución manual
-obs:
+jobs:
   build-ios:
     runs-on: macos-latest
     steps:
