@@ -53,7 +53,7 @@ jobs:
           
           # Comando para crear el archivo IPA usando Xcode
           xcodebuild -workspace "your-workspace.xcworkspace" \
-                      -scheme "your-scheme" \
+                      -scheme "org.example.kotlintestproject2" \
                       -sdk iphoneos \
                       -configuration Release \
                       archive \
