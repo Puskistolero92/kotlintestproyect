@@ -32,13 +32,13 @@ jobs:
 
     - name: Build iOS Framework (iOS X64 & ARM64)
       run: |
-        cd shared  # Asegúrate de que 'shared' es el nombre del módulo donde está la configuración de Kotlin Multiplatform
+        cd composeApp  # Asegúrate de que 'shared' es el nombre del módulo donde está la configuración de Kotlin Multiplatform
         ./gradlew :shared:linkReleaseFrameworkIosX64  # Compilamos para el simulador iOS
         ./gradlew :shared:linkReleaseFrameworkIosArm64  # Compilamos para dispositivos iOS
 
     - name: Assemble XCFramework
       run: |
-        cd shared
+        cd composeApp
         ./gradlew :shared:assembleXCFramework  # Ejecutamos la tarea que genera el XCFramework
 
     - name: Upload XCFramework artifact
