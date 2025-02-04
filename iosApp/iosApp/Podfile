@@ -1,0 +1,10 @@
+platform :ios, '11.0'
+
+target 'iosApp' do
+  use_frameworks!
+
+  # Pods for iosApp
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Analytics'
+end
