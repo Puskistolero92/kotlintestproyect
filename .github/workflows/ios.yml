@@ -5,7 +5,7 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
+  workflow_dispatch:  # Permite la ejecución manual
 jobs:
   build:
     name: Build and Test default scheme using any available iPhone simulator
