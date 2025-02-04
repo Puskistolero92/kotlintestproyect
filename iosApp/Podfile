@@ -2,4 +2,11 @@ platform :ios, '12.0'
 
 target 'iosApp' do
   use_frameworks!
+
+  post_install do |installer|
+    installer.pods_project.build_configurations.each do |config|
+      config.build_settings['EXCLUDED_ARCHITECTURES'] = 'i386' # Excluir i386 (simulador 32-bit)
+      config.build_settings['ARCHS'] = '$(ARCHS_STANDARD)' # Usar arm64 y x86_64
+    end
+  end
 end
