@@ -44,14 +44,15 @@ jobs:
           chmod +x gradlew
           ./gradlew :composeApp:assembleXCFramework  # Ejecutamos la tarea que genera el XCFramework  
           
-      - name: Verify XCFramework directory exists
-        run: |
-          ls -R composeApp/build
-          if [ -d "composeApp/build" ]; then
-            echo "Directory exists!"
-          else
-            echo "Directory does not exist!"
-          fi
-
       - name: ✅ Verificar que la build fue exitosa
-        run: ls -l composeApp/build/XCFrameworks/release
+        run: 
+         ls -l composeApp/build/bin/iosArm64/releaseFramework/
+         ls -l composeApp/build/bin/iosX64/releaseFramework/shared.framework
+         
+      - name: Upload iOS Frameworks
+        uses: actions/upload-artifact@v4
+        with:
+            name: shared-frameworks
+            path: |
+             composeApp/build/bin/iosArm64/releaseFramework/shared.framework
+             composeApp/build/bin/iosX64/releaseFramework/shared.framework
