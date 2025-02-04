@@ -12,7 +12,7 @@ on:
   workflow_dispatch:  # Permite la ejecución manual
 jobs:
   build-ios:
-    runs-on: macos-latest  # Usa un runner de macOS con Xcode
+    runs-on: macos-latest
     steps:
       - name: 📥 Clonar el repositorio
         uses: actions/checkout@v4
@@ -42,6 +42,6 @@ jobs:
       - name: 🏗️ Compilar el Framework de iOS
         run: |
           ./gradlew :shared:assembleXCFramework
-          
+
       - name: ✅ Verificar que la build fue exitosa
         run: ls -l shared/build/XCFrameworks/release
