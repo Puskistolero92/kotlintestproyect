@@ -41,7 +41,8 @@ jobs:
 
       - name: 🏗️ Compilar el Framework de iOS
         run: |
-         ./gradlew :shared:linkReleaseFrameworkIosX64
+          chmod +x gradlew
+          ./gradlew :composeApp:assembleXCFramework  # Ejecutamos la tarea que genera el XCFramework         
 
       - name: ✅ Verificar que la build fue exitosa
         run: ls -l shared/build/XCFrameworks/release
