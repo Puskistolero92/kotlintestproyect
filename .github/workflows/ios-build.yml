@@ -39,21 +39,33 @@ jobs:
           cd iosApp
           pod install
 
-      - name: 🏗️ Compilar el Framework de iOS
+      - name: Assemble iOS XCFramework
         run: |
           chmod +x gradlew
-          ./gradlew :composeApp:assembleXCFramework  # Ejecutamos la tarea que genera el XCFramework  
+          ./gradlew assembleXCFramework
+
+      - name: Create iOS IPA from Xcode
+        run: |
+          # Primero, asegúrate de tener configurada la firma de código en tu proyecto
+          export DEVELOPMENT_TEAM="YOUR_DEVELOPMENT_TEAM_ID"
+          export PROVISIONING_PROFILE="YOUR_PROVISIONING_PROFILE"
+          export CODE_SIGN_IDENTITY="iPhone Distribution"
           
-      - name: ✅ Verificar que la build fue exitosa
-        run: ls -l composeApp/build/bin/iosArm64/releaseFramework/
-        
-      - name: ✅ Verificar que la build fue exitosa
-        run: ls -l composeApp/build/bin/iosX64/releaseFramework/shared.framework
-         
-      - name: Upload iOS Frameworks
-        uses: actions/upload-artifact@v4
+          # Comando para crear el archivo IPA usando Xcode
+          xcodebuild -workspace "your-workspace.xcworkspace" \
+                      -scheme "your-scheme" \
+                      -sdk iphoneos \
+                      -configuration Release \
+                      archive \
+                      -archivePath $PWD/build/your-app.xcarchive
+
+          xcodebuild -exportArchive \
+                      -archivePath $PWD/build/your-app.xcarchive \
+                      -exportPath $PWD/build/ipa \
+                      -exportOptionsPlist "ExportOptions.plist"
+
+      - name: Upload IPA as artifact
+        uses: actions/upload-artifact@v2
         with:
-            name: shared-frameworks
-            path: |
-             composeApp/build/bin/iosArm64/releaseFramework/shared.framework
-             composeApp/build/bin/iosX64/releaseFramework/shared.framework
+          name: ios-app-ipa
+          path: $PWD/build/ipa/your-app.ipa
