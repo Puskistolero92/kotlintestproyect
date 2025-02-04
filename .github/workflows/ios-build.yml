@@ -45,9 +45,10 @@ jobs:
           ./gradlew :composeApp:assembleXCFramework  # Ejecutamos la tarea que genera el XCFramework  
           
       - name: ✅ Verificar que la build fue exitosa
-        run: 
-         ls -l composeApp/build/bin/iosArm64/releaseFramework/
-         ls -l composeApp/build/bin/iosX64/releaseFramework/shared.framework
+        run: ls -l composeApp/build/bin/iosArm64/releaseFramework/
+        
+      - name: ✅ Verificar que la build fue exitosa
+        run: ls -l composeApp/build/bin/iosX64/releaseFramework/shared.framework
          
       - name: Upload iOS Frameworks
         uses: actions/upload-artifact@v4
