@@ -65,7 +65,7 @@ jobs:
                       -exportOptionsPlist "ExportOptions.plist"
 
       - name: Upload IPA as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ios-app-ipa
           path: $PWD/build/ipa/your-app.ipa
