@@ -45,12 +45,11 @@ jobs:
 
       - name: 🔹 Build iOS App Archive (.xcarchive)
         run: |
-          xcodebuild -workspace iosApp/iosApp.xcworkspace \
-                     -scheme iosApp \
-                     -sdk iphoneos \
-                     -configuration Release \
-                     archive \
-                     -archivePath $GITHUB_WORKSPACE/build/iosApp.xcarchive
+          xcodebuild -workspace iosApp.xcworkspace \
+           -scheme iosApp \
+           -sdk iphonesimulator \
+           -configuration Debug \
+           build CODE_SIGNING_ALLOWED=NO
 
       - name: 🔹 Export IPA
         run: |
