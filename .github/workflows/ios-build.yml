@@ -56,6 +56,7 @@ jobs:
            -scheme iosApp \
            -sdk iphonesimulator \
            -configuration Debug \
+           ARCHS="arm64 x86_64"
            build CODE_SIGNING_ALLOWED=NO
 
       - name: 🔹 Export IPA
