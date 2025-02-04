@@ -1,0 +1,56 @@
+name: Build iOS XCFramework
+
+on:
+  push:
+    branches:
+      - main  # Cambia esto si usas una rama diferente para la integración
+  pull_request:
+    branches:
+      - main  # Cambia esto si usas una rama diferente para PR
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest  # Necesitamos un runner macOS para compilar iOS
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Set up Gradle wrapper
+      run: |
+        ./gradlew wrapper --gradle-version 8.9  # Asegúrate de que estás usando la versión correcta de Gradle
+
+    - name: Install CocoaPods (si estás usando CocoaPods para dependencias de iOS)
+      run: |
+        sudo gem install cocoapods
+        cd iosApp && pod install  # Si tienes un proyecto iOS que usa CocoaPods
+
+    - name: Build iOS Framework (iOS X64 & ARM64)
+      run: |
+        cd shared  # Asegúrate de que 'shared' es el nombre del módulo donde está la configuración de Kotlin Multiplatform
+        ./gradlew :shared:linkReleaseFrameworkIosX64  # Compilamos para el simulador iOS
+        ./gradlew :shared:linkReleaseFrameworkIosArm64  # Compilamos para dispositivos iOS
+
+    - name: Assemble XCFramework
+      run: |
+        cd shared
+        ./gradlew :shared:assembleXCFramework  # Ejecutamos la tarea que genera el XCFramework
+
+    - name: Upload XCFramework artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: shared.xcframework
+        path: shared/bin/ios/releaseXCFramework/shared.xcframework
