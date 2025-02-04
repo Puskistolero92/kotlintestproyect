@@ -25,11 +25,13 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "shared"
             isStatic = true
         }
     }
-    
+    tasks.register("assembleXCFramework") {
+        dependsOn("linkReleaseFrameworkIosX64", "linkReleaseFrameworkIosArm64")
+    }
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
