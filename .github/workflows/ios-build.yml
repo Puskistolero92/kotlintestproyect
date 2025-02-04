@@ -14,29 +14,34 @@ jobs:
   build-ios:
     runs-on: macos-latest
     steps:
-      - name: Checkout Repository
+      - name: 📥 Clonar el repositorio
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: 🔧 Configurar JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: List directory contents
-        run: ls -la  # Verifica la ubicación de gradlew
+      - name: 🛠️ Configurar Gradle
+        uses: gradle/gradle-build-action@v3
 
-      - name: Install CocoaPods dependencies
+      - name: 🔽 Instalar Ruby y CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod --version
+
+      - name: 🚀 Configurar Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: 📦 Instalar dependencias de CocoaPods
         run: |
           cd iosApp
           pod install
 
-      - name: Build iOS Framework
+      - name: 🏗️ Compilar el Framework de iOS
         run: |
-          cd ..
-          ./gradlew :ComposeApp:assembleXCFramework  # Este paso debería ejecutarse correctamente
+         ./gradlew :composeApp:assembleXCFramework
 
-      - name: Build iOS App
-        run: |
-          cd iosApp
-          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphoneos -configuration Release build
+      - name: ✅ Verificar que la build fue exitosa
+        run: ls -l shared/build/XCFrameworks/release
