@@ -21,18 +21,10 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v2
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
 
-    - name: Set up Gradle wrapper
-      run: |
-        ./gradlew wrapper --gradle-version 8.9  # Asegúrate de que estás usando la versión correcta de Gradle
-
+    - name: 🛠️ Configurar Gradle
+      uses: gradle/gradle-build-action@v3
+      
     - name: Install CocoaPods (si estás usando CocoaPods para dependencias de iOS)
       run: |
         sudo gem install cocoapods
