@@ -45,6 +45,7 @@ jobs:
 
       - name: 🔹 Build iOS App Archive (.xcarchive)
         run: |
+          cd iosApp
           xcodebuild -workspace iosApp.xcworkspace \
            -scheme iosApp \
            -sdk iphonesimulator \
