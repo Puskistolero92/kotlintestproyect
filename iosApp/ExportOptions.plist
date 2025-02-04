@@ -9,7 +9,7 @@
     <key>destination</key>
     <string>export</string>
     <key>signingStyle</key>
-    <string>manual</string>
+    <string>none</string>
     <key>teamID</key>
     <string></string> <!-- Déjalo vacío si no tienes cuenta de desarrollador -->
 </dict>
