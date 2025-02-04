@@ -50,7 +50,7 @@ jobs:
         ./gradlew :shared:assembleXCFramework  # Ejecutamos la tarea que genera el XCFramework
 
     - name: Upload XCFramework artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # Cambié la versión a v3
       with:
         name: shared.xcframework
         path: shared/bin/ios/releaseXCFramework/shared.xcframework
