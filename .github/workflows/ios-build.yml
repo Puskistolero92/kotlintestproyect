@@ -1,0 +1,47 @@
+name: Build iOS App
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-ios:
+    runs-on: macos-latest  # Usa un runner de macOS con Xcode
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: 🔧 Configurar JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 🛠️ Configurar Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: 🔽 Instalar Ruby y CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod --version
+
+      - name: 🚀 Configurar Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: 📦 Instalar dependencias de CocoaPods
+        run: |
+          cd iosApp
+          pod install
+
+      - name: 🏗️ Compilar el Framework de iOS
+        run: |
+          ./gradlew :shared:assembleXCFramework
+          
+      - name: ✅ Verificar que la build fue exitosa
+        run: ls -l shared/build/XCFrameworks/release
