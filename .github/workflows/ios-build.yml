@@ -52,7 +52,7 @@ jobs:
           export CODE_SIGN_IDENTITY="iPhone Distribution"
           
           # Comando para crear el archivo IPA usando Xcode
-          xcodebuild -workspace "kotlintestproject2.xcworkspace" \
+          xcodebuild -project "kotlintestproject2.xcodeproj" \
                       -scheme "org.example.kotlintestproject2" \
                       -sdk iphoneos \
                       -configuration Release \
