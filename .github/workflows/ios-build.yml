@@ -9,7 +9,7 @@ on:
     branches:
       - main
       - develop
-
+  workflow_dispatch:  # Permite la ejecución manual
 jobs:
   build-ios:
     runs-on: macos-latest  # Usa un runner de macOS con Xcode
