@@ -29,15 +29,21 @@ jobs:
       - name: 🔽 Instalar Ruby y CocoaPods
         run: |
           sudo gem install cocoapods
-          pod --version
 
       - name: 🚀 Configurar Gradle Wrapper
         run: chmod +x ./gradlew
 
       - name: 🔹 Install Xcode dependencies (Si usas CocoaPods)
-        run: pod install
-        working-directory: iosApp
+        run: |
+          pod repo update
+          pod install
         
+        working-directory: iosApp
+
+      - name: Clean DerivedData
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+
       - name: Assemble iOS XCFramework
         run: |
           chmod +x gradlew
