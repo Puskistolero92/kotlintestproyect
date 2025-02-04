@@ -46,7 +46,8 @@ jobs:
           
       - name: Verify XCFramework directory exists
         run: |
-          if [ -d "composeApp/build/XCFrameworks" ]; then
+          ls -R composeApp/build
+          if [ -d "composeApp/build" ]; then
             echo "Directory exists!"
           else
             echo "Directory does not exist!"
