@@ -34,7 +34,7 @@ jobs:
       - name: Build iOS Framework
         run: |
           cd ..
-          ./gradlew :composeApp:assembleXCFramework  # Este paso debería ejecutarse correctamente
+          ./gradlew :ComposeApp:assembleXCFramework  # Este paso debería ejecutarse correctamente
 
       - name: Build iOS App
         run: |
