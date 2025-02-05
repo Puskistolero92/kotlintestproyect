@@ -95,9 +95,6 @@ jobs:
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
-        
-      - name: ver posibilidades task
-        run: ./gradlew :composeApp:tasks --all
 
       - name: Build .dmg
         run: ./gradlew composeApp:packageRelease
