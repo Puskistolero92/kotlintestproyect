@@ -29,12 +29,12 @@ jobs:
       - name: Compilar para simulador iOS
         run: |
           chmod +x gradlew
-          ./gradlew iosSimulatorArm64Test
+          ./gradlew composeApp:assembleDebugIosSimulatorArm64
           
       - name: Compilar para dispositivos iOS reales
         run: |
           chmod +x gradlew
-          ./gradlew iosArm64Test
+          ./gradlew composeApp:assembleDebugiosArm64
 
       - name: Guardar artefactos (App)
         uses: actions/upload-artifact@v4
