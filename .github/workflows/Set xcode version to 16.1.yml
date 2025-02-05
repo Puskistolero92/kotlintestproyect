@@ -45,7 +45,9 @@ jobs:
         uses: ./.github/actions/setup-gradle
 
       - name: Build Android Sample
-        run: ./gradlew :androidApp:assembleGooglePlayDebug
+        run: | 
+          chmod +x gradlew
+          ./gradlew :androidApp:assembleGooglePlayDebug
         
   build-ios-app:
     name: Build iOS App
@@ -71,10 +73,12 @@ jobs:
 
       - name: Create Config xcconfig
         run: |
-          cp config/dummy-config.xcconfig iosApp/Assets/Config.xcconfig
+          cp iosApp/Assets/Config.xcconfig.template iosApp/Assets/Config.xcconfig
+          
       - name: Create FeedFlow xcconfig
         run: |
           cp iosApp/Assets/KotlintestProject-release.xcconfig iosApp/Assets/KotlintestProject.xcconfig
+     
       - name: Build iOS Sample
         run: |
           cd iosApp
