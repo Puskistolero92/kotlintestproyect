@@ -1,0 +1,51 @@
+name: iOS Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-ios:
+    runs-on: macos-latest  # Importante: Solo macOS puede compilar para iOS
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Configurar Kotlin
+        run: |
+          curl -sS https://get.sdkman.io | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install kotlin
+
+      - name: Instalar dependencias de CocoaPods
+        run: |
+          cd iosApp
+          pod install
+
+      - name: Compilar para simulador iOS
+        run: |
+          chmod +x gradlew
+          ./gradlew iosSimulatorArm64App:assembleDebug
+          
+      - name: Compilar para dispositivos iOS reales
+        run: |
+          chmod +x gradlew
+          ./gradlew iosArm64App:assembleRelease
+
+      - name: Guardar artefactos (App)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app
+          path: |
+            build/bin/iosSimulatorArm64/debugExecutable/
+            build/bin/iosArm64/releaseExecutable/
