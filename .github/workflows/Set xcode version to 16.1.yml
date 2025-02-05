@@ -19,10 +19,6 @@ jobs:
       - name: Setup environment
         uses: gradle/gradle-build-action@v3
         
-      - name: Create dummy Firebase json
-        run: |
-          cp config/dummy-google-services.json androidApp/src/debug/google-services.json
-          cp config/dummy-google-services.json androidApp/src/release/google-services.json
       - name: Run Checks
         run: ./gradlew check
 
@@ -46,10 +42,6 @@ jobs:
       - name: Setup environment
         uses: ./.github/actions/setup-gradle
 
-      - name: Create dummy Firebase json
-        run: |
-          cp config/dummy-google-services.json androidApp/src/debug/google-services.json
-          cp config/dummy-google-services.json androidApp/src/release/google-services.json 
       - name: Build Android Sample
         run: ./gradlew :androidApp:assembleGooglePlayDebug
         
@@ -75,12 +67,6 @@ jobs:
       - name: Setup environment
         uses: ./.github/actions/setup-gradle
 
-      - name: Create Dummy Firebase Plist
-        run: |
-          cp config/dummy-google-service.plist iosApp/dummy-google-service.plist
-          mv iosApp/dummy-google-service.plist iosApp/GoogleService-Info-dev.plist
-          cp config/dummy-google-service.plist iosApp/dummy-google-service.plist
-          mv iosApp/dummy-google-service.plist iosApp/GoogleService-Info.plist
       - name: Create Config xcconfig
         run: |
           cp config/dummy-config.xcconfig iosApp/Assets/Config.xcconfig
