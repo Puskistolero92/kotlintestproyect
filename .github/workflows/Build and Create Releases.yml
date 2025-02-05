@@ -2,8 +2,11 @@ name: Build and Create Releases
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - main  # Cambia esto si usas una rama diferente para la integración
+  pull_request:
+    branches:
+      - main  # Cambia esto si usas una rama diferente para PR
   workflow_dispatch:
 
 jobs:
@@ -19,8 +22,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: "prueba"
+          release_name: Release prueba
           draft: false
           prerelease: false
 
