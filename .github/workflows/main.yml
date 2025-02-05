@@ -35,7 +35,7 @@ jobs:
       - name: Compilar para simulador iOS
         run: |
           chmod +x gradlew
-          ./gradlew iosSimulatorArm64App:assembleDebug
+          ./gradlew tasks --all
           
       - name: Compilar para dispositivos iOS reales
         run: |
