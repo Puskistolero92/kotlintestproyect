@@ -47,7 +47,7 @@ jobs:
       - name: Build Android Sample
         run: | 
           chmod +x gradlew
-          ./gradlew -task
+          ./gradlew tasks --all
           ./gradlew composeApp:assembleGooglePlayDebug
         
   build-ios-app:
