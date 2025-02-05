@@ -25,7 +25,7 @@ jobs:
       - name: Run Swift Lint
         run: |
           cd iosApp
-          /opt/homebrew/bin/swiftlint
+          /opt/homebrew/bin/swiftlint autocorrect
           cd ..
       - name: Create dummy Firebase json
         run: |
