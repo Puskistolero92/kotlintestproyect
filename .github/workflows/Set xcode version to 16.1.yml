@@ -20,7 +20,9 @@ jobs:
         uses: gradle/gradle-build-action@v3
         
       - name: Run Checks
-        run: ./gradlew check
+        run: | 
+          chmod +x gradlew
+          ./gradlew check
 
       - name: Upload reports
         if: failure()
