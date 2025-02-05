@@ -29,17 +29,24 @@ jobs:
       - name: Compilar para simulador iOS
         run: |
           chmod +x gradlew
-          ./gradlew composeApp:iosSimulatorArm64Binaries
+          ./gradlew composeApp:iosSimulatorArm64Binaries --info
           
       - name: Compilar para dispositivos iOS reales
         run: |
           chmod +x gradlew
-          ./gradlew composeApp:iosArm64Binaries
-
+          ./gradlew composeApp:iosArm64Binaries --info
+          
+      - name: Verificar archivos generados
+        run: ls -R build/bin/
+        
       - name: Guardar artefactos (App)
         uses: actions/upload-artifact@v4
         with:
           name: ios-app
           path: |
             build/bin/iosSimulatorArm64/debugExecutable/
+            build/bin/iosSimulatorArm64/releaseExecutable/
+            build/bin/iosX64/debugExecutable/
+            build/bin/iosX64/releaseExecutable/
+            build/bin/iosArm64/debugExecutable/
             build/bin/iosArm64/releaseExecutable/
