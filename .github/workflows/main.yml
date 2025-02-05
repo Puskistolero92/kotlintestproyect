@@ -23,8 +23,6 @@ jobs:
 
       - name: Configurar Kotlin
         run: |
-          curl -sS https://get.sdkman.io | bash
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
           sdk install kotlin
 
       - name: Instalar dependencias de CocoaPods
@@ -35,12 +33,12 @@ jobs:
       - name: Compilar para simulador iOS
         run: |
           chmod +x gradlew
-          ./gradlew tasks --all
+          ./gradlew iosSimulatorArm64Test
           
       - name: Compilar para dispositivos iOS reales
         run: |
           chmod +x gradlew
-          ./gradlew iosArm64App:assembleRelease
+          ./gradlew iosArm64Test
 
       - name: Guardar artefactos (App)
         uses: actions/upload-artifact@v4
