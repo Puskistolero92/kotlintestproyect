@@ -47,7 +47,8 @@ jobs:
       - name: Build Android Sample
         run: | 
           chmod +x gradlew
-          ./gradlew :composeApp:assembleGooglePlayDebug
+          ./gradlew -task
+          ./gradlew composeApp:assembleGooglePlayDebug
         
   build-ios-app:
     name: Build iOS App
@@ -73,7 +74,7 @@ jobs:
 
       - name: Create Config xcconfig
         run: |
-          cp iosApp/Assets/Config.xcconfig.template iosApp/Assets/Config.xcconfig
+          cp iosApp/Configuration/Config.xcconfig.template iosApp/Assets/Config.xcconfig
           
       - name: Create FeedFlow xcconfig
         run: |
