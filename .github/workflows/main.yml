@@ -21,10 +21,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Configurar Kotlin
-        run: |
-          sdk install kotlin
-
       - name: Instalar dependencias de CocoaPods
         run: |
           cd iosApp
