@@ -1,0 +1,49 @@
+name: iOS Build and Test
+
+on:
+  push:
+    branches:
+      - main  # Cambia esta rama si usas otro nombre.
+  pull_request:
+    branches:
+      - main  # Cambia esta rama si usas otro nombre.
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      # 1. Checkout del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # 2. Configurar el entorno de Gradle
+      - name: Set up Gradle
+        uses: gradle/wrapper-validation-action@v3
+
+      # 3. Configurar CocoaPods
+      - name: Set up CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod install --project-directory=iosApp
+
+      # 4. Generar el XCFramework de Kotlin Multiplatform
+      - name: Build Kotlin XCFramework
+        run: ./gradlew assembleXCFramework
+
+      # 5. Compilar la aplicación iOS para arm64 y x86_64
+      - name: Build iOS app for arm64 and x86_64
+        run: |
+          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphonesimulator ARCHS="arm64 x86_64" clean build
+
+      # 6. Crear el archivo .ipa para pruebas
+      - name: Export IPA
+        run: |
+          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphoneos -configuration Release archive -archivePath $PWD/build/iosApp.xcarchive
+          xcodebuild -exportArchive -archivePath $PWD/build/iosApp.xcarchive -exportPath $PWD/build/iosApp.ipa -exportOptionsPlist iosApp/ExportOptions.plist
+
+      # 7. Subir el archivo IPA como un artefacto para pruebas
+      - name: Upload IPA as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: iosApp.ipa
+          path: build/iosApp.ipa
