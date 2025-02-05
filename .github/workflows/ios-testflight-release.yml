@@ -24,11 +24,11 @@ jobs:
     - name: Build iOS
       uses: gradle/gradle-build-action@v3
       with:
-        arguments: ":shared:build"
+        arguments: ":composeApp:build"
     - name: Install Cocoapod Library
       uses: gradle/gradle-build-action@v3
       with:
-        arguments: ":shared:podInstall"
+        arguments: ":composeApp:podInstall"
     - name: Set Default Scheme for iOS
       run: |
         cd iosApp
