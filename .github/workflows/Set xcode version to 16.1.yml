@@ -18,15 +18,7 @@ jobs:
 
       - name: Setup environment
         uses: gradle/gradle-build-action@v3
-
-      - name: Install Swift Lint
-        run: |
-          brew install swiftlint
-      - name: Run Swift Lint
-        run: |
-          cd iosApp
-          /opt/homebrew/bin/swiftlint autocorrect
-          cd ..
+        
       - name: Create dummy Firebase json
         run: |
           cp config/dummy-google-services.json androidApp/src/debug/google-services.json
