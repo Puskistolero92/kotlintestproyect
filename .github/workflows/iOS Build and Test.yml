@@ -14,7 +14,7 @@ jobs:
     steps:
       # 1. Checkout del repositorio
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # 2. Configurar el entorno de Gradle
       - name: Set up Gradle
