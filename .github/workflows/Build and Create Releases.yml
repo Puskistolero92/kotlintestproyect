@@ -100,7 +100,7 @@ jobs:
         run: ./gradlew :composeApp:tasks --all
 
       - name: Build .dmg
-        run: ./gradlew composeApp:packageReleaseDmg
+        run: ./gradlew composeApp:packageRelease
 
       - name: Get Version Name
         id: get_version_name
