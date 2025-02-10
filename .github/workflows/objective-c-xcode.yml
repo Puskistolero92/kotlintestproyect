@@ -18,7 +18,7 @@ jobs:
       - name: Set Default Scheme
         run: |
             # Cambiar al directorio ios
-            cd /Users/runner/work/kotlintestproyect/kotlintestproyect/ios
+            cd /Users/runner/work/kotlintestproyect/ios
             # Ejecutar xcodebuild -list en el directorio ios
             scheme_list=$(xcodebuild -list -json 2>/dev/null | tr -d "\n")
             if [ -z "$scheme_list" ]; then
