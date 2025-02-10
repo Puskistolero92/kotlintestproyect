@@ -41,4 +41,4 @@ jobs:
            sed -i '' 's/com.example.iosApp/com.your_name.iosApp/g' iosApp.xcodeproj/project.pbxproj
                       -configuration Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO clean build
 
-          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' -configuration Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO clean build
+          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -configuration Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' clean build
