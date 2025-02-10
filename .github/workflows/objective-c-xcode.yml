@@ -50,7 +50,7 @@ jobs:
 
       - name: Build
         env:
-            scheme: ${{ 'default' }}
+            scheme: iosApp
         run: |
             # Verificar que el esquema sea válido
             if [ -z "$scheme" ]; then
