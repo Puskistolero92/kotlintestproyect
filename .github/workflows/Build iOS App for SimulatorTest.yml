@@ -33,13 +33,6 @@ jobs:
           cd iosApp
           pod install
 
-      - name: Build for iOS Simulator
-        run: |
-          cd iosApp
-          sed -i '' 's/DEVELOPMENT_TEAM = .*;/DEVELOPMENT_TEAM = "";/' iosApp.xcodeproj/project.pbxproj
-          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.0' clean build
-
-
       # Paso 4: Configurar firma automática para el simulador
       - name: Set automatic code signing for simulator
         run: |
