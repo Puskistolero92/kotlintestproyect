@@ -15,30 +15,58 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Debug directory structure
-        run: |
-          echo "Current directory structure:"
-          ls -R
       - name: Set Default Scheme
         run: |
-            # Cambiar al directorio ios
+          # Cambiar al directorio iosApp
+          if [ -d "iosApp" ]; then
             cd iosApp
-            # Ejecutar xcodebuild -list en el directorio ios
-            scheme_list=$(xcodebuild -list -json 2>/dev/null | tr -d "\n")
-            if [ -z "$scheme_list" ]; then
-            echo "No Xcode project or workspace found in the 'ios' folder!"
+          else
+            echo "No 'iosApp' folder found!"
             exit 1
-            fi
-            # Extraer el esquema predeterminado
-            default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-            echo $default | cat >default
-            echo Using default scheme: $default
-          
+          fi
+      
+          # Ejecutar xcodebuild -list en el directorio ios
+          scheme_list=$(xcodebuild -list -json 2>/dev/null | tr -d "\n")
+          if [ -z "$scheme_list" ]; then
+            echo "No Xcode project or workspace found in the 'iosApp' folder!"
+            exit 1
+          fi
+      
+          # Extraer el esquema predeterminado
+          default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
+          if [ -z "$default" ]; then
+            echo "No default scheme found!"
+            exit 1
+          fi
+      
+          # Crear el archivo default y verificar su contenido
+          echo $default > default
+          echo "Using default scheme: $default"
+          cat default
+
       - name: Build
         env:
-          scheme: ${{ 'default' }}
+            scheme: ${{ 'default' }}
         run: |
-          if [ $scheme = default ]; then scheme=$(cat default); fi
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
-          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" | xcpretty && exit ${PIPESTATUS[0]}
+            if [ -z "$scheme" ]; then
+              if [ -f default ]; then
+                scheme=$(cat default)
+              else
+                echo "No scheme found and no default file available!"
+                exit 1
+              fi
+            fi
+        
+            # Buscar en la carpeta 'iosApp' para el archivo .xcworkspace o .xcodeproj
+            if [ "`ls -A iosApp | grep -i \\.xcworkspace\$`" ]; then
+              filetype_parameter="workspace" && file_to_build="`ls -A iosApp | grep -i \\.xcworkspace\$`"
+            elif [ "`ls -A iosApp | grep -i \\.xcodeproj\$`" ]; then
+              filetype_parameter="project" && file_to_build="`ls -A iosApp | grep -i \\.xcodeproj\$`"
+            else
+              echo "No se encontró un archivo .xcworkspace o .xcodeproj en la carpeta 'iosApp'"
+              exit 1
+            fi
+            file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
+        
+            # Ejecutar el build, clean y analyze
+            xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "iosApp/$file_to_build" | xcpretty && exit ${PIPESTATUS[0]}
