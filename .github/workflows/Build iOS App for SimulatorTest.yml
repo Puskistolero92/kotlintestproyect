@@ -38,7 +38,7 @@ jobs:
       # Paso 4: Configurar firma automática para el simulador
       - name: Set automatic code signing for simulator
         run: |
-          chmod +x ./iosApp/gradlew
+          chmod +x ./gradlew
           cd iosApp
           # Establecer un identificador único para el Bundle si es necesario
           sed -i '' 's/com.example.iosApp/com.your_name.iosApp/g' iosApp.xcodeproj/project.pbxproj
