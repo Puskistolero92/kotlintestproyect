@@ -33,18 +33,10 @@ jobs:
           cd iosApp
           pod install
 
-      # Paso 4: Configurar firma automática para el simulador
-      - name: Set automatic code signing for simulator
-        run: |
-          chmod +x ./gradlew
-          cd iosApp
-          # Establecer un identificador único para el Bundle si es necesario
-          sed -i '' 's/com.example.iosApp/com.your_name.iosApp/g' iosApp.xcodeproj/project.pbxproj
-          # Configurar la firma automática en Xcode para que funcione sin cuenta de desarrollador
-          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -configuration Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO clean build
-
       # Paso 5: Ejecutar la compilación en el simulador de iOS
       - name: Build and run on iOS simulator
         run: |
+          chmod +x ./gradlew
           cd iosApp
+           sed -i '' 's/com.example.iosApp/com.your_name.iosApp/g' iosApp.xcodeproj/project.pbxproj
           xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' clean build
