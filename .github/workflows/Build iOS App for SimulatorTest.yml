@@ -1,0 +1,51 @@
+name: Build iOS App for Simulator
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      # Paso 1: Hacer checkout del código
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Paso 2: Configurar el simulador de iOS
+      - name: Set up Xcode simulator
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+          sudo xcodebuild -license accept
+          echo "Xcode setup complete"
+
+      # Paso 3: Instalación de dependencias si es necesario
+      # Este paso es opcional si tienes dependencias específicas en tu proyecto
+      # Si usas CocoaPods o Carthage, asegúrate de incluir un paso para instalar las dependencias
+      - name: Install dependencies (if needed)
+        run: |
+          # Si usas CocoaPods
+          pod install --project-directory=iosApp
+          # Si usas Carthage
+          # carthage bootstrap --platform iOS --project-directory=iosApp
+
+      # Paso 4: Configurar firma automática para el simulador
+      - name: Set automatic code signing for simulator
+        run: |
+          cd iosApp
+          # Establecer un identificador único para el Bundle si es necesario
+          sed -i '' 's/com.example.iosApp/com.your_name.iosApp/g' iosApp.xcodeproj/project.pbxproj
+          # Configurar la firma automática en Xcode para que funcione sin cuenta de desarrollador
+          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -configuration Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO clean build
+
+      # Paso 5: Ejecutar la compilación en el simulador de iOS
+      - name: Build and run on iOS simulator
+        run: |
+          cd iosApp
+          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' clean build
