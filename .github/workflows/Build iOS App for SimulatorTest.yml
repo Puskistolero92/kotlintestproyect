@@ -28,13 +28,15 @@ jobs:
       # Paso 3: Instalación de dependencias si es necesario
       # Este paso es opcional si tienes dependencias específicas en tu proyecto
       # Si usas CocoaPods o Carthage, asegúrate de incluir un paso para instalar las dependencias
-      - name: Install dependencies (if needed)
+      - name: Install CocoaPods dependencies
         run: |
-          # Si usas CocoaPods
-          pod install --project-directory=iosApp
-          # Si usas Carthage
-          # carthage bootstrap --platform iOS --project-directory=iosApp
-          
+          cd iosApp
+          pod install
+      - name: Build for iOS Simulator
+        run: |
+          cd iosApp
+          xcodebuild -workspace iosApp.xcworkspace -scheme iosApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.0' clean build
+
       # Paso 4: Configurar firma automática para el simulador
       - name: Set automatic code signing for simulator
         run: |
