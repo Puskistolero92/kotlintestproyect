@@ -43,11 +43,16 @@ jobs:
           echo $default > default
           echo "Using default scheme: $default"
           cat default
+      - name: Debug Schemes Available
+        run: |
+          cd iosApp
+          xcodebuild -list
 
       - name: Build
         env:
             scheme: ${{ 'default' }}
         run: |
+            # Verificar que el esquema sea válido
             if [ -z "$scheme" ]; then
               if [ -f default ]; then
                 scheme=$(cat default)
@@ -57,16 +62,35 @@ jobs:
               fi
             fi
         
-            # Buscar en la carpeta 'iosApp' para el archivo .xcworkspace o .xcodeproj
-            if [ "`ls -A iosApp | grep -i \\.xcworkspace\$`" ]; then
-              filetype_parameter="workspace" && file_to_build="`ls -A iosApp | grep -i \\.xcworkspace\$`"
-            elif [ "`ls -A iosApp | grep -i \\.xcodeproj\$`" ]; then
-              filetype_parameter="project" && file_to_build="`ls -A iosApp | grep -i \\.xcodeproj\$`"
+            # Buscar el archivo .xcworkspace o .xcodeproj en la carpeta 'iosApp'
+            if [ -d "iosApp" ]; then
+              cd iosApp
             else
-              echo "No se encontró un archivo .xcworkspace o .xcodeproj en la carpeta 'iosApp'"
+              echo "'iosApp' folder not found!"
               exit 1
             fi
-            file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
         
-            # Ejecutar el build, clean y analyze
-            xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "iosApp/$file_to_build" | xcpretty && exit ${PIPESTATUS[0]}
+            # Verificar si hay un archivo .xcworkspace
+            if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then
+              filetype_parameter="workspace" 
+              file_to_build="`ls -A | grep -i \\.xcworkspace\$`"
+            elif [ "`ls -A | grep -i \\.xcodeproj\$`" ]; then
+              filetype_parameter="project" 
+              file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
+            else
+              echo "No .xcworkspace or .xcodeproj file found in the 'iosApp' folder!"
+              exit 1
+            fi
+        
+            # Asegurarse de que el archivo no tenga espacios al principio o al final
+            file_to_build=$(echo $file_to_build | awk '{$1=$1; print}')
+        
+            # Ejecutar xcodebuild para limpiar, construir y analizar el proyecto
+            echo "Building with scheme: $scheme, file: $file_to_build"
+            xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" | xcpretty
+        
+            # Si hubo algún error durante el build, salir con el código de error correcto
+            if [ $? -ne 0 ]; then
+              echo "Build failed with error code $?"
+              exit 1
+            fi
