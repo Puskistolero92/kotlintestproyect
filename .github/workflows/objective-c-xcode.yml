@@ -48,49 +48,53 @@ jobs:
           cd iosApp
           xcodebuild -list
 
-      - name: Build
+      - name: Build and Run on Simulator
         env:
-            scheme: iosApp
+          scheme: iosApp
         run: |
-            # Verificar que el esquema sea válido
-            if [ -z "$scheme" ]; then
-              if [ -f default ]; then
-                scheme=$(cat default)
-              else
-                echo "No scheme found and no default file available!"
-                exit 1
-              fi
-            fi
-        
-            # Buscar el archivo .xcworkspace o .xcodeproj en la carpeta 'iosApp'
-            if [ -d "iosApp" ]; then
-              cd iosApp
+          # Verificar que el esquema sea válido
+          if [ -z "$scheme" ]; then
+            if [ -f default ]; then
+              scheme=$(cat default)
             else
-              echo "'iosApp' folder not found!"
+              echo "No scheme found and no default file available!"
               exit 1
             fi
-        
-            # Verificar si hay un archivo .xcworkspace
-            if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then
-              filetype_parameter="workspace" 
-              file_to_build="`ls -A | grep -i \\.xcworkspace\$`"
-            elif [ "`ls -A | grep -i \\.xcodeproj\$`" ]; then
-              filetype_parameter="project" 
-              file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
-            else
-              echo "No .xcworkspace or .xcodeproj file found in the 'iosApp' folder!"
-              exit 1
-            fi
-        
-            # Asegurarse de que el archivo no tenga espacios al principio o al final
-            file_to_build=$(echo $file_to_build | awk '{$1=$1; print}')
-        
-            # Ejecutar xcodebuild para limpiar, construir y analizar el proyecto
-            echo "Building with scheme: $scheme, file: $file_to_build"
-            xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" | xcpretty
-        
-            # Si hubo algún error durante el build, salir con el código de error correcto
-            if [ $? -ne 0 ]; then
-              echo "Build failed with error code $?"
-              exit 1
-            fi
+          fi
+      
+          # Cambiar al directorio de iOS si es necesario
+          if [ -d "iosApp" ]; then
+            cd iosApp
+          else
+            echo "'iosApp' folder not found!"
+            exit 1
+          fi
+      
+          # Verificar si hay un archivo .xcworkspace o .xcodeproj
+          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then
+            filetype_parameter="workspace" 
+            file_to_build="`ls -A | grep -i \\.xcworkspace\$`"
+          elif [ "`ls -A | grep -i \\.xcodeproj\$`" ]; then
+            filetype_parameter="project" 
+            file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
+          else
+            echo "No .xcworkspace or .xcodeproj file found in the 'iosApp' folder!"
+            exit 1
+          fi
+      
+          # Asegurarse de que el archivo no tenga espacios al principio o al final
+          file_to_build=$(echo $file_to_build | awk '{$1=$1; print}')
+      
+          # Construir la app usando el esquema y el archivo
+          echo "Building with scheme: $scheme, file: $file_to_build"
+          xcodebuild clean build -scheme "$scheme" -"$filetype_parameter" "$file_to_build"
+      
+          # Ejecutar en el simulador de iOS
+          echo "Running the app on iOS Simulator"
+          xcodebuild test -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination 'platform=iOS Simulator,name=iPhone 13'
+      
+          # Verificar si la compilación y ejecución en el simulador fue exitosa
+          if [ $? -ne 0 ]; then
+            echo "Build or simulation failed with error code $?"
+            exit 1
+          fi
