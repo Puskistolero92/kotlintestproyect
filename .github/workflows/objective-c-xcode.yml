@@ -15,6 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
+      - name: Debug directory structure
+        run: |
+          echo "Current directory structure:"
+          ls -R
       - name: Set Default Scheme
         run: |
             # Cambiar al directorio ios
